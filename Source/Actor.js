@@ -9,10 +9,10 @@ function Actor(color, pos, activity)
 	this.ticksSinceKilled = null;
 	this.ticksToDie = 30;
  
-	this.collider = new Circle(this.pos, 8);
+	this.collider = new Sphere(this.pos, 8);
  
 	this.powerMin = 1;
-	this.powerMax = 4;
+	this.powerMax = 6;
 	this.powerPerTick = .1;
  
 	this.azimuthInTurnsMin = .5;
@@ -43,7 +43,7 @@ function Actor(color, pos, activity)
 		this.ticksSinceKilled = null;
 		this.pos.y = 0;
 		this.vel.clear();
-	}
+	};
  
 	Actor.prototype.updateForTimerTick = function(world)
 	{
@@ -82,7 +82,7 @@ function Actor(color, pos, activity)
 		{
 			world.reset();
 		}
-	}
+	};
  
 	// drawable
  
@@ -111,9 +111,9 @@ function Actor(color, pos, activity)
 			(
 				text,
 				this.collider.radius,
-				Coords.Instances.Zeroes,
+				Coords.Instances().Zeroes,
 				this.color
 			);
 		}
-	}
+	};
 }

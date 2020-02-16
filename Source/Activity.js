@@ -32,20 +32,24 @@ function Activity(perform)
 				}   
 				else if (inputActive == "ArrowLeft")
 				{
-					actor.firePolar.azimuthInTurns -= actor.turnsPerTick;
-					actor.firePolar.trimAzimuthToRangeMinMax
+					var firePolar = actor.firePolar
+					firePolar.azimuthInTurns = 
 					(
-						actor.azimuthInTurnsMin, 
-						actor.azimuthInTurnsMax
+						firePolar.azimuthInTurns - actor.turnsPerTick
+					).trimToRangeMinMax
+					(
+						actor.azimuthInTurnsMin, actor.azimuthInTurnsMax
 					);
 				}
 				else if (inputActive == "ArrowRight")
 				{
-					actor.firePolar.azimuthInTurns += actor.turnsPerTick;
-					actor.firePolar.trimAzimuthToRangeMinMax
+					var firePolar = actor.firePolar
+					firePolar.azimuthInTurns = 
 					(
-						actor.azimuthInTurnsMin, 
-						actor.azimuthInTurnsMax
+						firePolar.azimuthInTurns + actor.turnsPerTick
+					).trimToRangeMinMax
+					(
+						actor.azimuthInTurnsMin, actor.azimuthInTurnsMax
 					);
 				}
 				else if (inputActive == "ArrowUp")

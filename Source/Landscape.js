@@ -2,7 +2,12 @@
 function Landscape(size, horizonPoints)
 {
 	this.size = size;
-	this.color = "Green";   
+	this.horizonPoints = horizonPoints;
+
+	this.windVelocityMultiplier = 1;
+	this.windVelocityRandomize();
+
+	this.color = "Green"; 
 
 	this.edges = [];
 	var horizonPointPrev = horizonPoints[0];
@@ -28,7 +33,7 @@ function Landscape(size, horizonPoints)
 		var returnValue = new Landscape(size, points).randomize();
  
 		return returnValue;
-	}
+	};
  
 	// instance methods
  
@@ -48,7 +53,7 @@ function Landscape(size, horizonPoints)
 				(
 					horizonPointPrev
 				);
-	 
+
 				var t = 
 					(xToCheck - horizonPointPrev.x)
 					/ (horizonChange.x);
@@ -64,8 +69,8 @@ function Landscape(size, horizonPoints)
 			horizonPointPrev = horizonPoint;
 		}
  
-		return returnValue;		 
-	}
+		return returnValue;
+	};
 
 	Landscape.prototype.collidesWithEdge = function(edgeOther)
 	{
@@ -85,8 +90,8 @@ function Landscape(size, horizonPoints)
 			}
 		}
 		return returnValue
-	}
- 
+	};
+
 	Landscape.prototype.randomize = function()
 	{
 		var altitudeMid = this.size.y / 2;
@@ -102,20 +107,28 @@ function Landscape(size, horizonPoints)
 			var edge = this.edges[i];
 			var point = edge.vertices[1];
 			point.y = altitudeMin + Math.random() * altitudeRange;
-			edge.recalculateDerivedValues();
 		}
+		this._vertices = null;
  
-		return this;		
-	}
+		return this;
+	};
+	
+	Landscape.prototype.windVelocityRandomize = function()
+	{
+		this.windVelocity =
+			this.windVelocityMultiplier * (Math.random() * 2 - 1);
+	};
  
 	// drawable
-	 
+
 	Landscape.prototype.drawToDisplay = function(display)
 	{
-		for (var i = 0; i < this.edges.length; i++)
+		if (this._vertices == null)
 		{
-			var edge = this.edges[i];
-			display.drawLine(edge.vertices[0], edge.vertices[1], this.color);
+			this._vertices = this.horizonPoints.clone();
+			this._vertices.push(this.size.clone());
+			this._vertices.push(new Coords(0, this.size.y));
 		}
-	}
+		display.drawPolygon(this._vertices, this.color);
+	};
 }

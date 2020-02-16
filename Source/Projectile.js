@@ -5,7 +5,7 @@ function Projectile(color, pos, vel)
 	this.pos = pos;
 	this.vel = vel;
  
-	this.collider = new Circle(this.pos, 2);
+	this.collider = new Sphere(this.pos, 2);
  
 	this.ticksSinceExplosion = null;
 	this.ticksToExplode = 30;
@@ -66,8 +66,8 @@ function Projectile(color, pos, vel)
 				{
 					var edgeFromExplosionToActor = new Edge
 					([
-						this.pos.clone().addXY(0, -1), // hack 
-						actor.pos.clone().addXY(0, -1)
+						this.pos.clone().addDimensions(0, -1, 0), // hack 
+						actor.pos.clone().addDimensions(0, -1, 0)
 					]);
 					var isExplosionBlockedByGround = world.landscape.collidesWithEdge
 					(

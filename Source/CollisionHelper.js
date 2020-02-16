@@ -22,7 +22,7 @@ function CollisionHelper()
 		var returnValue = (distanceBetweenCenters < sumOfRadii);
  
 		return returnValue;
-	}
+	};
 
 	CollisionHelper.prototype.doEdgesCollide = function(edge0, edge1)
 	{
@@ -33,9 +33,9 @@ function CollisionHelper()
 			this.edgeProjected = new Edge([new Coords(), new Coords()]);
 		}
 		var edgeProjected = this.edgeProjected;
-		edgeProjected.overwriteWith(edge1).projectOnto(edge0);
+		edgeProjected.overwriteWith(edge1).projectOntoOther(edge0);
 		var edgeProjectedStart = edgeProjected.vertices[0];
-		var edgeProjectedDirection = edgeProjected.direction;	   
+		var edgeProjectedDirection = edgeProjected.direction;
  
 		var distanceAlongEdgeProjectedToXAxis = 
 			0 - edgeProjectedStart.y
@@ -62,5 +62,5 @@ function CollisionHelper()
 		}
  
 		return returnValue;
-	}
+	};
 }

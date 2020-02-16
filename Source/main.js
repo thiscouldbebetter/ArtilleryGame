@@ -1,8 +1,8 @@
 function main()
 {
-	var displaySize = new Coords(200, 200);
+	var displaySize = new Coords(400, 300);
  
-	var display = new Display(displaySize);
+	var display = new Display([displaySize]);
  
 	var world = World.random(new Coords(0, .05), displaySize);
  

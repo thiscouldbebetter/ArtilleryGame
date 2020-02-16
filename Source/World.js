@@ -5,7 +5,9 @@ function World(gravityPerTick, size, landscape, actors)
 	this.size = size;
 	this.landscape = landscape;
 	this.actors = actors;
- 
+
+	this.skyColor = "Cyan";
+
 	this.actorIndexCurrent = 0;
 	this.projectiles = [];
 }
@@ -29,7 +31,7 @@ function World(gravityPerTick, size, landscape, actors)
 				Activity.Instances.UserInputAccept
 			), 
 		];
- 
+
 		var returnValue = new World
 		(
 			gravityPerTick,
@@ -37,21 +39,21 @@ function World(gravityPerTick, size, landscape, actors)
 			landscape,
 			actors
 		);
- 
+
 		return returnValue;
-	}
- 
+	};
+
 	// instance methods
  
 	World.prototype.actorCurrent = function()
 	{
 		return this.actors[this.actorIndexCurrent];
-	}
+	};
  
 	World.prototype.actorCurrentAdvance = function()
 	{
 		this.actorIndexCurrent = this.actors.length - 1 - this.actorIndexCurrent;
-	}
+	};
  
 	World.prototype.reset = function()
 	{
@@ -61,7 +63,7 @@ function World(gravityPerTick, size, landscape, actors)
 			var actor = this.actors[i];
 			actor.reset();
 		}   
-	}
+	};
  
 	World.prototype.updateForTimerTick = function()
 	{
@@ -76,13 +78,14 @@ function World(gravityPerTick, size, landscape, actors)
 			var actor = this.actors[i];
 			actor.updateForTimerTick(this);
 		}
-	}
+	};
  
 	// drawable
  
 	World.prototype.drawToDisplay = function(display)
 	{
 		display.clear();
+		display.drawBackground(this.skyColor, "Gray");
 		this.landscape.drawToDisplay(display);
  
 		for (var i = 0; i < this.actors.length; i++)
@@ -97,5 +100,5 @@ function World(gravityPerTick, size, landscape, actors)
 			var projectile = this.projectiles[i];
 			projectile.drawToDisplay(display);
 		}
-	}
+	};
 }
