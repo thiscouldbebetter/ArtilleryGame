@@ -27,7 +27,13 @@ function Projectile(color, pos, vel)
 	{
 		if (this.ticksSinceExplosion == null)
 		{
-			this.vel.add(world.gravityPerTick);
+			this.vel.add
+			(
+				world.gravityPerTick
+			).add
+			(
+				new Coords(.001, 0).multiplyScalar(world.windVelocity)
+			);
 			this.pos.add(this.vel);
 			if (this.pos.y > world.size.y)
 			{

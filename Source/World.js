@@ -10,6 +10,8 @@ function World(gravityPerTick, size, landscape, actors)
 
 	this.actorIndexCurrent = 0;
 	this.projectiles = [];
+
+	this.windVelocityRandomize();
 }
 {
 	World.random = function(gravityPerTick, size)
@@ -53,11 +55,13 @@ function World(gravityPerTick, size, landscape, actors)
 	World.prototype.actorCurrentAdvance = function()
 	{
 		this.actorIndexCurrent = this.actors.length - 1 - this.actorIndexCurrent;
+		this.windVelocityRandomize();
 	};
  
 	World.prototype.reset = function()
 	{
 		this.landscape.randomize();
+		this.windVelocityRandomize();
 		for (var i = 0; i < this.actors.length; i++)
 		{
 			var actor = this.actors[i];
@@ -78,6 +82,14 @@ function World(gravityPerTick, size, landscape, actors)
 			var actor = this.actors[i];
 			actor.updateForTimerTick(this);
 		}
+	};
+
+	World.prototype.windVelocityRandomize = function()
+	{
+		this.windVelocity = Math.floor
+		(
+			10 * (Math.random() * 2 - 1)
+		);
 	};
  
 	// drawable

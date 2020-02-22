@@ -80,7 +80,7 @@ function Activity(perform)
  
 					world.projectiles = [ projectile ];
  
-					world.actorIndexCurrent = 1 - world.actorIndexCurrent;
+					world.actorCurrentAdvance();
 				}   
 				inputHelper.keyPressed = false;
 			}

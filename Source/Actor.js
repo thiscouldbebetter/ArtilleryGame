@@ -94,8 +94,9 @@ function Actor(color, pos, activity)
 			this.pos,
 			this.muzzlePos
 		);
-		 
-		if (this == Globals.Instance.world.actorCurrent())
+
+		var world = Globals.Instance.world;
+		if (this == world.actorCurrent())
 		{
 			var fireAzimuthInTurnsRecentered = Math.abs
 			( 
@@ -106,7 +107,14 @@ function Actor(color, pos, activity)
 				fireAzimuthInTurnsRecentered 
 				* Polar.DegreesPerTurn
 			);
-			var text = "Angle:" + fireAzimuthInDegrees + " Power:" + this.powerCurrent;
+			var windVelocity = world.windVelocity;
+			var windDirection = (windVelocity < 0 ? "<" : ">");
+			var windSpeed = Math.abs(windVelocity);
+			var text =
+				"Angle:" + fireAzimuthInDegrees
+				+ " Power:" + this.powerCurrent
+				+ " Wind: " + windDirection + " " + windSpeed;
+
 			display.drawText
 			(
 				text,

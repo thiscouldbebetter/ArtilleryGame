@@ -4,9 +4,6 @@ function Landscape(size, horizonPoints)
 	this.size = size;
 	this.horizonPoints = horizonPoints;
 
-	this.windVelocityMultiplier = 1;
-	this.windVelocityRandomize();
-
 	this.color = "Green"; 
 
 	this.edges = [];
@@ -111,12 +108,6 @@ function Landscape(size, horizonPoints)
 		this._vertices = null;
  
 		return this;
-	};
-	
-	Landscape.prototype.windVelocityRandomize = function()
-	{
-		this.windVelocity =
-			this.windVelocityMultiplier * (Math.random() * 2 - 1);
 	};
  
 	// drawable
