@@ -2,14 +2,14 @@
 function Actor(color, pos, activity)
 {
 	this.color = color;
-	this.pos = pos;
+	this.loc = new Location(pos);
 	this.activity = activity;
  
 	this.wins = 0;
 	this.ticksSinceKilled = null;
 	this.ticksToDie = 30;
  
-	this.collider = new Sphere(this.pos, 8);
+	this.collider = new Sphere(this.loc.pos, 8);
  
 	this.powerMin = 1;
 	this.powerMax = 6;
@@ -23,17 +23,23 @@ function Actor(color, pos, activity)
 		(this.azimuthInTurnsMin + this.azimuthInTurnsMax) / 2, 
 		this.collider.radius * 2
 	);
-	this.muzzlePos = this.pos.clone().add
+	this.muzzlePos = pos.clone().add
 	(
 		this.firePolar.toCoords( new Coords() )
 	);
- 
-	this.vel = new Coords();
- 
+  
 	this.reset();
 }
 
 {
+	Actor.prototype.firePolarAbsolute = function()
+	{
+		var forward = this.loc.orientation.forward;
+		var forwardInTurns = new Polar().fromCoords(forward).azimuthInTurns;
+		var returnValue = this.firePolar.clone().addToAzimuthInTurns(forwardInTurns);
+		return returnValue;
+	};
+
 	Actor.prototype.reset = function()
 	{
 		this.firePolar.azimuthInTurns = 
@@ -41,38 +47,46 @@ function Actor(color, pos, activity)
 		this.powerCurrent = (this.powerMin + this.powerMax) / 2;
  
 		this.ticksSinceKilled = null;
-		this.pos.y = 0;
-		this.vel.clear();
+		this.loc.pos.y = 0;
+		this.loc.vel.clear();
 	};
  
 	Actor.prototype.updateForTimerTick = function(world)
 	{
 		if (this.ticksSinceKilled == null)
 		{
+			var pos = this.loc.pos;
+			var vel = this.loc.vel;
+
 			if (this == world.actorCurrent() && world.projectiles.length == 0)
 			{
 				this.activity.perform(world, this);
 			}
  
-			this.firePolar.toCoords(this.muzzlePos);
-			this.muzzlePos.add(this.pos);
+			this.firePolarAbsolute().toCoords(this.muzzlePos);
+			this.muzzlePos.add(pos);
  
-			var surfaceAltitude = world.landscape.altitudeAtX
+			var landscape = world.landscape;
+			var surfaceAltitude = landscape.altitudeAtX
 			(
-				this.pos.x
+				pos.x
 			);
-			var isBelowGround = (this.pos.y >= surfaceAltitude);
+			var isBelowGround = (pos.y >= surfaceAltitude);
 			if (isBelowGround == false)
 			{
-				this.vel.add(world.gravityPerTick);
-				this.pos.add(this.vel);
+				vel.add(world.gravityPerTick);
+				pos.add(vel);
 			}
 			else
 			{
-				this.vel.clear();
-				this.pos.y = surfaceAltitude;
+				vel.clear();
+				pos.y = surfaceAltitude;
+
+				var surfaceSlopeInTurns = landscape.slopeAtX(pos.x);
+				var surfaceSlopeAsPolar = new Polar(surfaceSlopeInTurns, 1);
+				var forward = this.loc.orientation.forward;
+				surfaceSlopeAsPolar.toCoords(forward);
 			}
- 
 		}
 		else if (this.ticksSinceKilled < this.ticksToDie)
 		{
@@ -88,11 +102,19 @@ function Actor(color, pos, activity)
  
 	Actor.prototype.drawToDisplay = function(display)
 	{
-		display.drawCircle(this.pos, this.collider.radius, this.color);
-		display.drawLine
+		var pos = this.loc.pos;
+
+		display.drawLine(pos, this.muzzlePos);
+
+		var ori = this.loc.orientation;
+		var forward = ori.forward;
+		var forwardAsPolar = new Polar().fromCoords(forward);
+		var forwardAsTurns = forwardAsPolar.azimuthInTurns;
+		var angleStart = (forwardAsTurns + .5).wrapToRangeMax(1);
+		var angleStop = (angleStart + .5).wrapToRangeMax(1);
+		display.drawWedge
 		(
-			this.pos,
-			this.muzzlePos
+			pos, this.collider.radius, angleStart, angleStop, this.color
 		);
 
 		var world = Globals.Instance.world;
@@ -108,7 +130,7 @@ function Actor(color, pos, activity)
 				* Polar.DegreesPerTurn
 			);
 			var windVelocity = world.windVelocity;
-			var windDirection = (windVelocity < 0 ? "<" : ">");
+			var windDirection = (windVelocity < 0 ? "<<" : ">>");
 			var windSpeed = Math.abs(windVelocity);
 			var text =
 				"Angle:" + fireAzimuthInDegrees

@@ -73,7 +73,7 @@ function Projectile(color, pos, vel)
 					var edgeFromExplosionToActor = new Edge
 					([
 						this.pos.clone().addDimensions(0, -1, 0), // hack 
-						actor.pos.clone().addDimensions(0, -1, 0)
+						actor.loc.pos.clone().addDimensions(0, -1, 0)
 					]);
 					var isExplosionBlockedByGround = world.landscape.collidesWithEdge
 					(

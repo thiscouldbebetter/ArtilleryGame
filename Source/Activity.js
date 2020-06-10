@@ -69,7 +69,7 @@ function Activity(perform)
 						actor.color,
 						actor.muzzlePos.clone(),
 						// vel
-						actor.firePolar.toCoords
+						actor.firePolarAbsolute().toCoords
 						(
 							new Coords()
 						).normalize().multiplyScalar

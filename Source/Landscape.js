@@ -36,37 +36,24 @@ function Landscape(size, horizonPoints)
  
 	Landscape.prototype.altitudeAtX = function(xToCheck)
 	{
-		var returnValue;
- 
-		for (var i = 0; i < this.edges.length; i++)
-		{
-			var edge = this.edges[i];
-			var horizonPointPrev = edge.vertices[0];
-			var horizonPoint = edge.vertices[1];
+		var edge = this.edgeAtX(xToCheck);
+		var horizonPointPrev = edge.vertices[0];
+		var horizonPoint = edge.vertices[1];
 
-			if (horizonPoint.x > xToCheck)
-			{
-				var horizonChange = horizonPoint.clone().subtract
-				(
-					horizonPointPrev
-				);
+		var horizonChange = horizonPoint.clone().subtract
+		(
+			horizonPointPrev
+		);
 
-				var t = 
-					(xToCheck - horizonPointPrev.x)
-					/ (horizonChange.x);
- 
-				var altitude = 
-					horizonPointPrev.y 
-					+ (t * horizonChange.y);
- 
-				returnValue = altitude;
-				break;
-			}
- 
-			horizonPointPrev = horizonPoint;
-		}
- 
-		return returnValue;
+		var t = 
+			(xToCheck - horizonPointPrev.x)
+			/ (horizonChange.x);
+
+		var altitude = 
+			horizonPointPrev.y 
+			+ (t * horizonChange.y);
+
+		return altitude;
 	};
 
 	Landscape.prototype.collidesWithEdge = function(edgeOther)
@@ -80,13 +67,37 @@ function Landscape(size, horizonPoints)
 			(
 				edgeThis, edgeOther
 			);
-			if (doEdgesCollide == true)
+			if (doEdgesCollide)
 			{
 				returnValue = true;
 				break;
 			}
 		}
 		return returnValue
+	};
+
+	Landscape.prototype.edgeAtX = function(xToCheck)
+	{
+		var returnValue = this.edges[0];
+ 
+		for (var i = 0; i < this.edges.length; i++)
+		{
+			var edge = this.edges[i];
+			var horizonPoint = edge.vertices[1];
+
+			if (horizonPoint.x > xToCheck)
+			{
+				returnValue = edge;
+				break;
+			}
+ 		}
+ 
+ 		if (returnValue == null)
+ 		{
+			returnValue = this.edges[this.edges.length - 1];
+ 		}
+ 
+		return returnValue;
 	};
 
 	Landscape.prototype.randomize = function()
@@ -109,6 +120,21 @@ function Landscape(size, horizonPoints)
  
 		return this;
 	};
+
+	Landscape.prototype.slopeAtX = function(xToCheck)
+	{
+		var edge = this.edgeAtX(xToCheck);
+		var horizonPointPrev = edge.vertices[0];
+		var horizonPoint = edge.vertices[1];
+
+		var horizonChange = horizonPoint.clone().subtract
+		(
+			horizonPointPrev
+		).normalize();
+
+		var returnValue = new Polar().fromCoords(horizonChange).azimuthInTurns;
+		return returnValue;
+	}
  
 	// drawable
 

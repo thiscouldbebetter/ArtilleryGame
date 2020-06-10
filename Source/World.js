@@ -104,7 +104,7 @@ function World(gravityPerTick, size, landscape, actors)
 		{
 			var actor = this.actors[i];
 			actor.drawToDisplay(display);
-			display.drawText("" + actor.wins, actor.radius, actor.pos, actor.color);
+			//display.drawText("" + actor.wins, actor.radius, actor.loc.pos, actor.color);
 		}
  
 		for (var i = 0; i < this.projectiles.length; i++)
