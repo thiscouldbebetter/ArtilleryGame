@@ -1,15 +1,16 @@
  
-function Projectile(color, pos, vel)
+function Projectile(color, pos, vel, radiusExplodingMax)
 {
 	this.color = color;
 	this.pos = pos;
 	this.vel = vel;
+	this.radiusExplodingMax = radiusExplodingMax;
  
-	this.collider = new Sphere(this.pos, 2);
+	var radiusInFlight = 2;
+	this.collider = new Sphere(this.pos, radiusInFlight);
  
 	this.ticksSinceExplosion = null;
 	this.ticksToExplode = 30;
-	this.radiusExplodingMax = 20;
 }
 
 {

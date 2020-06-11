@@ -2,6 +2,7 @@
 function InputHelper()
 {
 	this.keyPressed = null;
+	this.keysToPreventDefaultsFor = [ "Tab" ];
 }
 
 {
@@ -15,5 +16,9 @@ function InputHelper()
 	InputHelper.prototype.handleEventKeyDown = function(event)
 	{
 		this.keyPressed = event.key;
+		if (this.keysToPreventDefaultsFor.indexOf(this.keyPressed) >= 0)
+		{
+			event.preventDefault();
+		}
 	}
 }

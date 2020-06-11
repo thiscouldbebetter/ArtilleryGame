@@ -1,10 +1,13 @@
  
-function Actor(color, pos, activity)
+function Actor(color, pos, activity, items)
 {
 	this.color = color;
 	this.loc = new Location(pos);
 	this.activity = activity;
  
+	this.items = items;
+	this.itemSelectedIndex = 0;
+
 	this.wins = 0;
 	this.ticksSinceKilled = null;
 	this.ticksToDie = 30;
@@ -38,6 +41,11 @@ function Actor(color, pos, activity)
 		var forwardInTurns = new Polar().fromCoords(forward).azimuthInTurns;
 		var returnValue = this.firePolar.clone().addToAzimuthInTurns(forwardInTurns);
 		return returnValue;
+	};
+
+	Actor.prototype.itemSelected = function()
+	{
+		return this.items[this.itemSelectedIndex];
 	};
 
 	Actor.prototype.reset = function()
@@ -133,7 +141,8 @@ function Actor(color, pos, activity)
 			var windDirection = (windVelocity < 0 ? "<<" : ">>");
 			var windSpeed = Math.abs(windVelocity);
 			var text =
-				"Angle:" + fireAzimuthInDegrees
+				"Weapon:" + this.itemSelected().toString()
+				+ " Angle:" + fireAzimuthInDegrees
 				+ " Power:" + this.powerCurrent
 				+ " Wind: " + windDirection + " " + windSpeed;
 

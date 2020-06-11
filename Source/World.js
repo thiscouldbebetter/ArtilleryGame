@@ -1,9 +1,10 @@
  
-function World(gravityPerTick, size, landscape, actors)
+function World(gravityPerTick, size, landscape, itemDefns, actors)
 {
 	this.gravityPerTick = gravityPerTick;
 	this.size = size;
 	this.landscape = landscape;
+	this.itemDefns = itemDefns.addLookupsByName();
 	this.actors = actors;
 
 	this.skyColor = "Cyan";
@@ -16,21 +17,33 @@ function World(gravityPerTick, size, landscape, actors)
 {
 	World.random = function(gravityPerTick, size)
 	{
-		var landscape = Landscape.random(size, 10);
+		var landscape = Landscape.random(size, 20);
  
+		var itemDefns = ItemDefn.Instances()._All;
+
 		var actors = 
 		[
 			new Actor
 			(
 				"Blue", 
 				new Coords(size.x / 6, 0),
-				Activity.Instances.UserInputAccept
+				Activity.Instances.UserInputAccept,
+				[
+					new Item("Slug", null),
+					new Item("Shell", 3),
+					new Item("ShellLarge", 1)
+				]
 			), 
 			new Actor
 			(
 				"Red", 
 				new Coords(5 * size.x / 6, 0),
-				Activity.Instances.UserInputAccept
+				Activity.Instances.UserInputAccept,
+				[
+					new Item("Slug", null),
+					new Item("Shell", 3),
+					new Item("ShellLarge", 1)
+				]
 			), 
 		];
 
@@ -39,6 +52,7 @@ function World(gravityPerTick, size, landscape, actors)
 			gravityPerTick,
 			size,
 			landscape,
+			itemDefns,
 			actors
 		);
 

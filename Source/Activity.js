@@ -64,24 +64,43 @@ function Activity(perform)
 				}
 				else if (inputActive == "Enter")
 				{
-					var projectile = new Projectile
-					(
-						actor.color,
-						actor.muzzlePos.clone(),
-						// vel
-						actor.firePolarAbsolute().toCoords
+					var itemSelected = actor.itemSelected();
+					if (itemSelected.quantity == null || itemSelected.quantity > 0)
+					{
+						if (itemSelected.quantity != null)
+						{
+							itemSelected.quantity--;
+						}
+
+						var projectile = itemSelected.projectileBuild
 						(
-							new Coords()
-						).normalize().multiplyScalar
-						(
-							actor.powerCurrent
-						)
-					);
- 
-					world.projectiles = [ projectile ];
- 
-					world.actorCurrentAdvance();
+							world,
+							actor.color,
+							actor.muzzlePos.clone(),
+							// vel
+							actor.firePolarAbsolute().toCoords
+							(
+								new Coords()
+							).normalize().multiplyScalar
+							(
+								actor.powerCurrent
+							)
+						);
+
+						world.projectiles = [ projectile ];
+
+						world.actorCurrentAdvance();
+					}
 				}   
+				else if (inputActive == "Tab")
+				{
+					actor.itemSelectedIndex++;
+					if (actor.itemSelectedIndex >= actor.items.length)
+					{
+						actor.itemSelectedIndex = 0;
+					}
+				}
+
 				inputHelper.keyPressed = false;
 			}
 		);

@@ -107,14 +107,25 @@ function Landscape(size, horizonPoints)
 		var altitudeRangeHalf = altitudeRange / 2;
 		var altitudeMin = altitudeMid - altitudeRangeHalf;
 		var altitudeMax = altitudeMin + altitudeRange;
+
+		var altitudeChangeMaxPerPoint = 4 * this.size.x / this.edges.length;
  
-		this.edges[0].vertices[0].y = 
-			altitudeMin + Math.random() * altitudeRange;
+		var pointPrev = this.edges[0].vertices[0];
+		pointPrev.y = altitudeMin + Math.random() * altitudeRange;
+
 		for (var i = 0; i < this.edges.length; i++)
 		{
 			var edge = this.edges[i];
 			var point = edge.vertices[1];
-			point.y = altitudeMin + Math.random() * altitudeRange;
+			point.y = pointPrev.y + Math.random() * altitudeChangeMaxPerPoint;
+			if (point.y < altitudeMin)
+			{
+				point.y = altitudeMin + (altitudeMin - point.y);
+			}
+			else if (point.y > altitudeMax)
+			{
+				point.y = altitudeMax - (point.y - altitudeMax);
+			}
 		}
 		this._vertices = null;
  
