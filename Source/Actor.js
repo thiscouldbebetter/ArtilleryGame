@@ -2,7 +2,7 @@
 function Actor(color, pos, activity, items)
 {
 	this.color = color;
-	this.loc = new Location(pos);
+	this.loc = new Disposition(pos);
 	this.activity = activity;
  
 	this.items = items;
