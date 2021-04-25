@@ -1,22 +1,26 @@
 
-function Item(defnName, quantity)
+class Item
 {
-	this.defnName = defnName;
-	this.quantity = quantity;
-}
-{
-	Item.prototype.defn = function(world)
+	constructor(defnName, quantity)
 	{
-		return world.itemDefns[this.defnName];
-	};
+		this.defnName = defnName;
+		this.quantity = quantity;
+	}
 
-	Item.prototype.projectileBuild = function(world, color, pos, vel)
+	defn(world)
 	{
-		return this.defn(world).projectileBuild(color, pos, vel);
-	};
+		return world.itemDefnsByName.get(this.defnName);
+	}
 
-	Item.prototype.toString = function()
+	projectileBuild(world, color, pos, vel)
+	{
+		var defn = this.defn(world);
+		var returnValue = defn.projectileBuild(color, pos, vel);
+		return returnValue;
+	}
+
+	toString()
 	{
 		return this.defnName + " (" + (this.quantity || "-") + ")";
-	};
+	}
 }

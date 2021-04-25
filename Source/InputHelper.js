@@ -1,19 +1,20 @@
  
-function InputHelper()
+class InputHelper
 {
-	this.keyPressed = null;
-	this.keysToPreventDefaultsFor = [ "Tab" ];
-}
+	constructor()
+	{
+		this.keyPressed = null;
+		this.keysToPreventDefaultsFor = [ "Tab" ];
+	}
 
-{
-	InputHelper.prototype.initialize = function()
+	initialize()
 	{
 		document.body.onkeydown = this.handleEventKeyDown.bind(this);
 	}
  
 	// events 
  
-	InputHelper.prototype.handleEventKeyDown = function(event)
+	handleEventKeyDown(event)
 	{
 		this.keyPressed = event.key;
 		if (this.keysToPreventDefaultsFor.indexOf(this.keyPressed) >= 0)

@@ -1,22 +1,31 @@
- 
-// classes
- 
-function Activity(perform)
+  
+class Activity
 {
-	this.perform = perform;
-}
+	constructor(perform)
+	{
+		this.perform = perform;
+	}
 
+	static Instances()
+	{
+		if (Activity._instances == null)
+		{
+			Activity._instances = new Activity_Instances();
+		}
+		return Activity._instances;
+	}
+}
+ 
+class Activity_Instances
 {
-	Activity.Instances = new Activity_Instances()
-	 
-	function Activity_Instances()
+	constructor()
 	{
 		this.DoNothing = new Activity(function perform() {});
 		this.UserInputAccept = new Activity
 		(
-			function perform(world, actor)
+			(world, actor) => // perform
 			{
-				var inputHelper = Globals.Instance.inputHelper;
+				var inputHelper = Globals.Instance().inputHelper;
 				var inputActive = inputHelper.keyPressed;
 				var powerFactor = 1000;
  
@@ -33,22 +42,18 @@ function Activity(perform)
 				else if (inputActive == "ArrowLeft")
 				{
 					var firePolar = actor.firePolar
-					firePolar.azimuthInTurns = 
+					firePolar.azimuthInTurns = NumberHelper.trimToRangeMinMax
 					(
-						firePolar.azimuthInTurns - actor.turnsPerTick
-					).trimToRangeMinMax
-					(
+						firePolar.azimuthInTurns - actor.turnsPerTick,
 						actor.azimuthInTurnsMin, actor.azimuthInTurnsMax
 					);
 				}
 				else if (inputActive == "ArrowRight")
 				{
 					var firePolar = actor.firePolar
-					firePolar.azimuthInTurns = 
+					firePolar.azimuthInTurns = NumberHelper.trimToRangeMinMax
 					(
-						firePolar.azimuthInTurns + actor.turnsPerTick
-					).trimToRangeMinMax
-					(
+						firePolar.azimuthInTurns + actor.turnsPerTick,
 						actor.azimuthInTurnsMin, actor.azimuthInTurnsMax
 					);
 				}

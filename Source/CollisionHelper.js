@@ -1,13 +1,21 @@
 
-function CollisionHelper()
+class CollisionHelper
 {
-	this.displacement = new Coords();
-}
+	constructor()
+	{
+		this.displacement = new Coords();
+	}
 
-{
-	CollisionHelper.Instance = new CollisionHelper();
+	static Instance()
+	{
+		if (CollisionHelper._instance == null)
+		{
+			CollisionHelper._instance = new CollisionHelper();
+		}
+		return CollisionHelper._instance;
+	}
  
-	CollisionHelper.prototype.doCirclesCollide = function(circle0, circle1)
+	doCirclesCollide(circle0, circle1)
 	{
 		var distanceBetweenCenters = this.displacement.overwriteWith
 		(
@@ -22,9 +30,9 @@ function CollisionHelper()
 		var returnValue = (distanceBetweenCenters < sumOfRadii);
  
 		return returnValue;
-	};
+	}
 
-	CollisionHelper.prototype.doEdgesCollide = function(edge0, edge1)
+	doEdgesCollide(edge0, edge1)
 	{
 		var returnValue = null;
  
@@ -62,5 +70,5 @@ function CollisionHelper()
 		}
  
 		return returnValue;
-	};
+	}
 }

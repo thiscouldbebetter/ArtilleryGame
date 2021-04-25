@@ -1,20 +1,25 @@
 
-function ItemDefn(name, projectileBuild)
+class ItemDefn
 {
-	this.name = name;
-	this.projectileBuild = projectileBuild;
-}
-{
-	ItemDefn.Instances = function()
+	constructor(name, projectileBuild)
+	{
+		this.name = name;
+		this.projectileBuild = projectileBuild;
+	}
+
+	static Instances()
 	{
 		if (ItemDefn._instances == null)
 		{
 			ItemDefn._instances = new ItemDefn_Instances();
 		}
 		return ItemDefn._instances;
-	};
+	}
+}
 
-	function ItemDefn_Instances()
+class ItemDefn_Instances
+{
+	constructor()
 	{
 		this.Shell = new ItemDefn
 		(
@@ -34,6 +39,7 @@ function ItemDefn(name, projectileBuild)
 			this.Shell,
 			this.ShellLarge,
 			this.Slug
-		].addLookupsByName();
+		];
+		this._AllByName = ArrayHelper.addLookupsByName(this._All);
 	}
 }

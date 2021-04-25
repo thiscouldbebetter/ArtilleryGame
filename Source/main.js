@@ -6,7 +6,7 @@ function main()
  
 	var world = World.random(new Coords(0, .05), displaySize);
  
-	Globals.Instance.initialize
+	Globals.Instance().initialize
 	(
 		10, // ticksPerSecond
 		display,

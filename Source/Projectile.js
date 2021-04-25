@@ -1,20 +1,21 @@
  
-function Projectile(color, pos, vel, radiusExplodingMax)
+class Projectile
 {
-	this.color = color;
-	this.pos = pos;
-	this.vel = vel;
-	this.radiusExplodingMax = radiusExplodingMax;
- 
-	var radiusInFlight = 2;
-	this.collider = new Sphere(this.pos, radiusInFlight);
- 
-	this.ticksSinceExplosion = null;
-	this.ticksToExplode = 30;
-}
+	constructor(color, pos, vel, radiusExplodingMax)
+	{
+		this.color = color;
+		this.pos = pos;
+		this.vel = vel;
+		this.radiusExplodingMax = radiusExplodingMax;
+	 
+		var radiusInFlight = 2;
+		this.collider = new Sphere(this.pos, radiusInFlight);
+	 
+		this.ticksSinceExplosion = null;
+		this.ticksToExplode = 30;
+	}
 
-{
-	Projectile.prototype.radiusCurrent = function()
+	radiusCurrent()
 	{
 		var radiusCurrent = 
 			this.radiusExplodingMax 
@@ -24,7 +25,7 @@ function Projectile(color, pos, vel, radiusExplodingMax)
 		return radiusCurrent;
 	}
  
-	Projectile.prototype.updateForTimerTick = function(world)
+	updateForTimerTick(world)
 	{
 		if (this.ticksSinceExplosion == null)
 		{
@@ -57,7 +58,7 @@ function Projectile(color, pos, vel, radiusExplodingMax)
 		}
 		else
 		{  
-			var collisionHelper = CollisionHelper.Instance;
+			var collisionHelper = CollisionHelper.Instance();
 			var actors = world.actors;
 			for (var i = 0; i < actors.length; i++)
 			{
@@ -95,7 +96,7 @@ function Projectile(color, pos, vel, radiusExplodingMax)
 
 	// drawable
 
-	Projectile.prototype.drawToDisplay = function(display)
+	drawToDisplay(display)
 	{
 		if (this.ticksSinceExplosion == null)
 		{

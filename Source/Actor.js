@@ -1,54 +1,55 @@
  
-function Actor(color, pos, activity, items)
+class Actor
 {
-	this.color = color;
-	this.loc = new Disposition(pos);
-	this.activity = activity;
- 
-	this.items = items;
-	this.itemSelectedIndex = 0;
+	constructor(color, pos, activity, items)
+	{
+		this.color = color;
+		this.loc = new Disposition(pos);
+		this.activity = activity;
 
-	this.wins = 0;
-	this.ticksSinceKilled = null;
-	this.ticksToDie = 30;
- 
-	this.collider = new Sphere(this.loc.pos, 8);
- 
-	this.powerMin = 1;
-	this.powerMax = 6;
-	this.powerPerTick = .1;
- 
-	this.azimuthInTurnsMin = .5;
-	this.azimuthInTurnsMax = 1;
-	this.turnsPerTick = 1.0 / Polar.DegreesPerTurn;
-	this.firePolar = new Polar
-	(
-		(this.azimuthInTurnsMin + this.azimuthInTurnsMax) / 2, 
-		this.collider.radius * 2
-	);
-	this.muzzlePos = pos.clone().add
-	(
-		this.firePolar.toCoords( new Coords() )
-	);
-  
-	this.reset();
-}
+		this.items = items;
+		this.itemSelectedIndex = 0;
 
-{
-	Actor.prototype.firePolarAbsolute = function()
+		this.wins = 0;
+		this.ticksSinceKilled = null;
+		this.ticksToDie = 30;
+	 
+		this.collider = new Sphere(this.loc.pos, 8);
+	 
+		this.powerMin = 1;
+		this.powerMax = 6;
+		this.powerPerTick = .1;
+	 
+		this.azimuthInTurnsMin = .5;
+		this.azimuthInTurnsMax = 1;
+		this.turnsPerTick = 1.0 / Polar.DegreesPerTurn;
+		this.firePolar = new Polar
+		(
+			(this.azimuthInTurnsMin + this.azimuthInTurnsMax) / 2, 
+			this.collider.radius * 2
+		);
+		this.muzzlePos = pos.clone().add
+		(
+			this.firePolar.toCoords( new Coords() )
+		);
+	  
+		this.reset();
+	}
+
+	firePolarAbsolute()
 	{
 		var forward = this.loc.orientation.forward;
 		var forwardInTurns = new Polar().fromCoords(forward).azimuthInTurns;
 		var returnValue = this.firePolar.clone().addToAzimuthInTurns(forwardInTurns);
 		return returnValue;
-	};
+	}
 
-	Actor.prototype.itemSelected = function()
+	itemSelected()
 	{
 		return this.items[this.itemSelectedIndex];
-	};
+	}
 
-	Actor.prototype.reset = function()
+	reset()
 	{
 		this.firePolar.azimuthInTurns = 
 			(this.azimuthInTurnsMin + this.azimuthInTurnsMax) / 2, 
@@ -57,9 +58,9 @@ function Actor(color, pos, activity, items)
 		this.ticksSinceKilled = null;
 		this.loc.pos.y = 0;
 		this.loc.vel.clear();
-	};
+	}
  
-	Actor.prototype.updateForTimerTick = function(world)
+	updateForTimerTick(world)
 	{
 		if (this.ticksSinceKilled == null)
 		{
@@ -104,11 +105,11 @@ function Actor(color, pos, activity, items)
 		{
 			world.reset();
 		}
-	};
+	}
  
 	// drawable
  
-	Actor.prototype.drawToDisplay = function(display)
+	drawToDisplay(display)
 	{
 		var pos = this.loc.pos;
 
@@ -118,14 +119,14 @@ function Actor(color, pos, activity, items)
 		var forward = ori.forward;
 		var forwardAsPolar = new Polar().fromCoords(forward);
 		var forwardAsTurns = forwardAsPolar.azimuthInTurns;
-		var angleStart = (forwardAsTurns + .5).wrapToRangeMax(1);
-		var angleStop = (angleStart + .5).wrapToRangeMax(1);
+		var angleStart = NumberHelper.wrapToRangeMax(forwardAsTurns + .5, 1);
+		var angleStop = NumberHelper.wrapToRangeMax(angleStart + .5, 1);
 		display.drawWedge
 		(
 			pos, this.collider.radius, angleStart, angleStop, this.color
 		);
 
-		var world = Globals.Instance.world;
+		var world = Globals.Instance().world;
 		if (this == world.actorCurrent())
 		{
 			var fireAzimuthInTurnsRecentered = Math.abs
@@ -154,5 +155,5 @@ function Actor(color, pos, activity, items)
 				this.color
 			);
 		}
-	};
+	}
 }

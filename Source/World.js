@@ -1,21 +1,24 @@
  
-function World(gravityPerTick, size, landscape, itemDefns, actors)
+class World
 {
-	this.gravityPerTick = gravityPerTick;
-	this.size = size;
-	this.landscape = landscape;
-	this.itemDefns = itemDefns.addLookupsByName();
-	this.actors = actors;
+	constructor(gravityPerTick, size, landscape, itemDefns, actors)
+	{
+		this.gravityPerTick = gravityPerTick;
+		this.size = size;
+		this.landscape = landscape;
+		this.itemDefns = itemDefns;
+		this.itemDefnsByName = ArrayHelper.addLookupsByName(this.itemDefns);
+		this.actors = actors;
 
-	this.skyColor = "Cyan";
+		this.skyColor = Color.byName("Cyan");
 
-	this.actorIndexCurrent = 0;
-	this.projectiles = [];
+		this.actorIndexCurrent = 0;
+		this.projectiles = [];
 
-	this.windVelocityRandomize();
-}
-{
-	World.random = function(gravityPerTick, size)
+		this.windVelocityRandomize();
+	}
+
+	static random(gravityPerTick, size)
 	{
 		var landscape = Landscape.random(size, 20);
  
@@ -25,9 +28,9 @@ function World(gravityPerTick, size, landscape, itemDefns, actors)
 		[
 			new Actor
 			(
-				"Blue", 
+				Color.byName("Blue"), 
 				new Coords(size.x / 6, 0),
-				Activity.Instances.UserInputAccept,
+				Activity.Instances().UserInputAccept,
 				[
 					new Item("Slug", null),
 					new Item("Shell", 3),
@@ -36,9 +39,9 @@ function World(gravityPerTick, size, landscape, itemDefns, actors)
 			), 
 			new Actor
 			(
-				"Red", 
+				Color.byName("Red"), 
 				new Coords(5 * size.x / 6, 0),
-				Activity.Instances.UserInputAccept,
+				Activity.Instances().UserInputAccept,
 				[
 					new Item("Slug", null),
 					new Item("Shell", 3),
@@ -57,22 +60,22 @@ function World(gravityPerTick, size, landscape, itemDefns, actors)
 		);
 
 		return returnValue;
-	};
+	}
 
 	// instance methods
  
-	World.prototype.actorCurrent = function()
+	actorCurrent()
 	{
 		return this.actors[this.actorIndexCurrent];
-	};
+	}
  
-	World.prototype.actorCurrentAdvance = function()
+	actorCurrentAdvance()
 	{
 		this.actorIndexCurrent = this.actors.length - 1 - this.actorIndexCurrent;
 		this.windVelocityRandomize();
-	};
+	}
  
-	World.prototype.reset = function()
+	reset()
 	{
 		this.landscape.randomize();
 		this.windVelocityRandomize();
@@ -83,7 +86,7 @@ function World(gravityPerTick, size, landscape, itemDefns, actors)
 		}   
 	};
  
-	World.prototype.updateForTimerTick = function()
+	updateForTimerTick()
 	{
 		for (var i = 0; i < this.projectiles.length; i++)
 		{
@@ -96,22 +99,22 @@ function World(gravityPerTick, size, landscape, itemDefns, actors)
 			var actor = this.actors[i];
 			actor.updateForTimerTick(this);
 		}
-	};
+	}
 
-	World.prototype.windVelocityRandomize = function()
+	windVelocityRandomize()
 	{
 		this.windVelocity = Math.floor
 		(
 			10 * (Math.random() * 2 - 1)
 		);
-	};
+	}
  
 	// drawable
  
-	World.prototype.drawToDisplay = function(display)
+	drawToDisplay(display)
 	{
 		display.clear();
-		display.drawBackground(this.skyColor, "Gray");
+		display.drawBackground(this.skyColor, Color.byName("Gray"));
 		this.landscape.drawToDisplay(display);
  
 		for (var i = 0; i < this.actors.length; i++)
@@ -126,5 +129,5 @@ function World(gravityPerTick, size, landscape, itemDefns, actors)
 			var projectile = this.projectiles[i];
 			projectile.drawToDisplay(display);
 		}
-	};
+	}
 }

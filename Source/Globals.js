@@ -1,13 +1,16 @@
  
-function Globals()
+class Globals
 {
-	// Do nothing.
-}
-
-{
-	Globals.Instance = new Globals();
+	static Instance()
+	{
+		if (Globals._instance == null)
+		{
+			Globals._instance = new Globals();
+		}
+		return Globals._instance;
+	}
  
-	Globals.prototype.initialize = function(timerTicksPerSecond, display, world)
+	initialize(timerTicksPerSecond, display, world)
 	{
 		this.display = display;
 		this.display.initialize();
@@ -15,7 +18,7 @@ function Globals()
 		this.world = world;
  
 		this.inputHelper = new InputHelper();
-		 
+
 		var millisecondsPerTimerTick = Math.floor(1000 / this.timerTicksPerSecond);
 		this.timer = setInterval
 		(
@@ -28,7 +31,7 @@ function Globals()
  
 	// events
  
-	Globals.prototype.handleEventTimerTick = function()
+	handleEventTimerTick()
 	{
 		this.world.drawToDisplay(this.display);
 		this.world.updateForTimerTick();

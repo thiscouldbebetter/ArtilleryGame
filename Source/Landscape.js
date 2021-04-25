@@ -1,24 +1,25 @@
  
-function Landscape(size, horizonPoints)
+class Landscape
 {
-	this.size = size;
-	this.horizonPoints = horizonPoints;
-
-	this.color = "Green"; 
-
-	this.edges = [];
-	var horizonPointPrev = horizonPoints[0];
-	for (var i = 1; i < horizonPoints.length; i++)
+	constructor(size, horizonPoints)
 	{
-		var horizonPoint = horizonPoints[i];
-		var edge = new Edge([horizonPointPrev, horizonPoint]);
-		this.edges.push(edge);
-		horizonPointPrev = horizonPoint;
-	}
-}
+		this.size = size;
+		this.horizonPoints = horizonPoints;
 
-{
-	Landscape.random = function(size, numberOfPoints)
+		this.color = Color.byName("GreenDark"); 
+
+		this.edges = [];
+		var horizonPointPrev = horizonPoints[0];
+		for (var i = 1; i < horizonPoints.length; i++)
+		{
+			var horizonPoint = horizonPoints[i];
+			var edge = new Edge([horizonPointPrev, horizonPoint]);
+			this.edges.push(edge);
+			horizonPointPrev = horizonPoint;
+		}
+	}
+
+	static random(size, numberOfPoints)
 	{
 		var points = [];
 		for (var i = 0; i < numberOfPoints + 1; i++)
@@ -30,11 +31,11 @@ function Landscape(size, horizonPoints)
 		var returnValue = new Landscape(size, points).randomize();
  
 		return returnValue;
-	};
+	}
  
 	// instance methods
  
-	Landscape.prototype.altitudeAtX = function(xToCheck)
+	altitudeAtX(xToCheck)
 	{
 		var edge = this.edgeAtX(xToCheck);
 		var horizonPointPrev = edge.vertices[0];
@@ -54,12 +55,12 @@ function Landscape(size, horizonPoints)
 			+ (t * horizonChange.y);
 
 		return altitude;
-	};
+	}
 
-	Landscape.prototype.collidesWithEdge = function(edgeOther)
+	collidesWithEdge(edgeOther)
 	{
 		var returnValue = false;
-		var collisionHelper = CollisionHelper.Instance;
+		var collisionHelper = CollisionHelper.Instance();
 		for (var i = 0; i < this.edges.length; i++)
 		{
 			var edgeThis = this.edges[i];
@@ -74,9 +75,9 @@ function Landscape(size, horizonPoints)
 			}
 		}
 		return returnValue
-	};
+	}
 
-	Landscape.prototype.edgeAtX = function(xToCheck)
+	edgeAtX(xToCheck)
 	{
 		var returnValue = this.edges[0];
  
@@ -98,9 +99,9 @@ function Landscape(size, horizonPoints)
  		}
  
 		return returnValue;
-	};
+	}
 
-	Landscape.prototype.randomize = function()
+	randomize()
 	{
 		var altitudeMid = this.size.y / 2;
 		var altitudeRange = this.size.y / 2;
@@ -130,9 +131,9 @@ function Landscape(size, horizonPoints)
 		this._vertices = null;
  
 		return this;
-	};
+	}
 
-	Landscape.prototype.slopeAtX = function(xToCheck)
+	slopeAtX(xToCheck)
 	{
 		var edge = this.edgeAtX(xToCheck);
 		var horizonPointPrev = edge.vertices[0];
@@ -149,14 +150,14 @@ function Landscape(size, horizonPoints)
  
 	// drawable
 
-	Landscape.prototype.drawToDisplay = function(display)
+	drawToDisplay(display)
 	{
 		if (this._vertices == null)
 		{
-			this._vertices = this.horizonPoints.clone();
+			this._vertices = ArrayHelper.clone(this.horizonPoints);
 			this._vertices.push(this.size.clone());
-			this._vertices.push(new Coords(0, this.size.y));
+			this._vertices.push(Coords.fromXY(0, this.size.y));
 		}
 		display.drawPolygon(this._vertices, this.color);
-	};
+	}
 }
