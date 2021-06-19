@@ -1,7 +1,26 @@
  
-class World
+class World2
 {
-	constructor(gravityPerTick, size, landscape, itemDefns, actors)
+	gravityPerTick: Coords;
+	size: Coords;
+	landscape: Landscape;
+	itemDefns: ItemDefn2[];
+	actors: Actor2[];
+
+	itemDefnsByName: Map<string, ItemDefn2>;
+	skyColor: Color;
+	actorIndexCurrent: number;
+	projectiles: Projectile[];
+	windVelocity: number;
+
+	constructor
+	(
+		gravityPerTick: Coords,
+		size: Coords,
+		landscape: Landscape,
+		itemDefns: ItemDefn2[],
+		actors: Actor2[]
+	)
 	{
 		this.gravityPerTick = gravityPerTick;
 		this.size = size;
@@ -18,39 +37,39 @@ class World
 		this.windVelocityRandomize();
 	}
 
-	static random(gravityPerTick, size)
+	static random(gravityPerTick: Coords, size: Coords): World2
 	{
 		var landscape = Landscape.random(size, 20);
  
-		var itemDefns = ItemDefn.Instances()._All;
+		var itemDefns = ItemDefn2.Instances()._All;
 
 		var actors = 
 		[
-			new Actor
+			new Actor2
 			(
 				Color.byName("Blue"), 
-				new Coords(size.x / 6, 0),
-				Activity.Instances().UserInputAccept,
+				Coords.fromXY(size.x / 6, 0),
+				Activity2.Instances().UserInputAccept,
 				[
-					new Item("Slug", null),
-					new Item("Shell", 3),
-					new Item("ShellLarge", 1)
+					new Item2("Slug", null),
+					new Item2("Shell", 3),
+					new Item2("ShellLarge", 1)
 				]
 			), 
-			new Actor
+			new Actor2
 			(
 				Color.byName("Red"), 
-				new Coords(5 * size.x / 6, 0),
-				Activity.Instances().UserInputAccept,
+				Coords.fromXY(5 * size.x / 6, 0),
+				Activity2.Instances().UserInputAccept,
 				[
-					new Item("Slug", null),
-					new Item("Shell", 3),
-					new Item("ShellLarge", 1)
+					new Item2("Slug", null),
+					new Item2("Shell", 3),
+					new Item2("ShellLarge", 1)
 				]
 			), 
 		];
 
-		var returnValue = new World
+		var returnValue = new World2
 		(
 			gravityPerTick,
 			size,
@@ -64,18 +83,18 @@ class World
 
 	// instance methods
  
-	actorCurrent()
+	actorCurrent(): Actor2
 	{
 		return this.actors[this.actorIndexCurrent];
 	}
  
-	actorCurrentAdvance()
+	actorCurrentAdvance(): void
 	{
 		this.actorIndexCurrent = this.actors.length - 1 - this.actorIndexCurrent;
 		this.windVelocityRandomize();
 	}
  
-	reset()
+	reset(): void
 	{
 		this.landscape.randomize();
 		this.windVelocityRandomize();
@@ -86,7 +105,7 @@ class World
 		}   
 	};
  
-	updateForTimerTick()
+	updateForTimerTick(): void
 	{
 		for (var i = 0; i < this.projectiles.length; i++)
 		{
@@ -101,7 +120,7 @@ class World
 		}
 	}
 
-	windVelocityRandomize()
+	windVelocityRandomize(): void
 	{
 		this.windVelocity = Math.floor
 		(
@@ -111,7 +130,7 @@ class World
  
 	// drawable
  
-	drawToDisplay(display)
+	drawToDisplay(display: Display2D): void
 	{
 		display.clear();
 		display.drawBackground(this.skyColor, Color.byName("Gray"));

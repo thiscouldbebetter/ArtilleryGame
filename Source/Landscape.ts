@@ -1,7 +1,15 @@
  
 class Landscape
 {
-	constructor(size, horizonPoints)
+	size: Coords;
+	horizonPoints: Coords[];
+
+	color: Color;
+	edges: Edge[];
+
+	_vertices: Coords[];
+
+	constructor(size: Coords, horizonPoints: Coords[])
 	{
 		this.size = size;
 		this.horizonPoints = horizonPoints;
@@ -19,12 +27,12 @@ class Landscape
 		}
 	}
 
-	static random(size, numberOfPoints)
+	static random(size: Coords, numberOfPoints: number): Landscape
 	{
 		var points = [];
 		for (var i = 0; i < numberOfPoints + 1; i++)
 		{
-			var point = new Coords(i * size.x / numberOfPoints, 0);
+			var point = Coords.fromXY(i * size.x / numberOfPoints, 0);
 			points.push(point);
 		}
  
@@ -35,7 +43,7 @@ class Landscape
  
 	// instance methods
  
-	altitudeAtX(xToCheck)
+	altitudeAtX(xToCheck: number): number
 	{
 		var edge = this.edgeAtX(xToCheck);
 		var horizonPointPrev = edge.vertices[0];
@@ -57,10 +65,10 @@ class Landscape
 		return altitude;
 	}
 
-	collidesWithEdge(edgeOther)
+	collidesWithEdge(edgeOther: Edge): boolean
 	{
 		var returnValue = false;
-		var collisionHelper = CollisionHelper.Instance();
+		var collisionHelper = CollisionHelper2.Instance();
 		for (var i = 0; i < this.edges.length; i++)
 		{
 			var edgeThis = this.edges[i];
@@ -74,10 +82,10 @@ class Landscape
 				break;
 			}
 		}
-		return returnValue
+		return returnValue;
 	}
 
-	edgeAtX(xToCheck)
+	edgeAtX(xToCheck: number): Edge
 	{
 		var returnValue = this.edges[0];
  
@@ -101,7 +109,7 @@ class Landscape
 		return returnValue;
 	}
 
-	randomize()
+	randomize(): Landscape
 	{
 		var altitudeMid = this.size.y / 2;
 		var altitudeRange = this.size.y / 2;
@@ -133,7 +141,7 @@ class Landscape
 		return this;
 	}
 
-	slopeAtX(xToCheck)
+	slopeAtX(xToCheck: number): number
 	{
 		var edge = this.edgeAtX(xToCheck);
 		var horizonPointPrev = edge.vertices[0];
@@ -144,13 +152,13 @@ class Landscape
 			horizonPointPrev
 		).normalize();
 
-		var returnValue = new Polar().fromCoords(horizonChange).azimuthInTurns;
+		var returnValue = Polar.create().fromCoords(horizonChange).azimuthInTurns;
 		return returnValue;
 	}
  
 	// drawable
 
-	drawToDisplay(display)
+	drawToDisplay(display: Display2D): void
 	{
 		if (this._vertices == null)
 		{
@@ -158,6 +166,6 @@ class Landscape
 			this._vertices.push(this.size.clone());
 			this._vertices.push(Coords.fromXY(0, this.size.y));
 		}
-		display.drawPolygon(this._vertices, this.color);
+		display.drawPolygon(this._vertices, this.color, null); // colorBorder
 	}
 }

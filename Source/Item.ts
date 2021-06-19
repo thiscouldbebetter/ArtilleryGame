@@ -1,25 +1,31 @@
 
-class Item
+class Item2
 {
-	constructor(defnName, quantity)
+	defnName: string;
+	quantity: number;
+ 
+	constructor(defnName: string, quantity: number)
 	{
 		this.defnName = defnName;
 		this.quantity = quantity;
 	}
 
-	defn(world)
+	defn(world: World2): ItemDefn2
 	{
 		return world.itemDefnsByName.get(this.defnName);
 	}
 
-	projectileBuild(world, color, pos, vel)
+	projectileBuild
+	(
+		world: World2, color: Color, pos: Coords, vel: Coords
+	): Projectile
 	{
 		var defn = this.defn(world);
 		var returnValue = defn.projectileBuild(color, pos, vel);
 		return returnValue;
 	}
 
-	toString()
+	toString(): string
 	{
 		return this.defnName + " (" + (this.quantity || "-") + ")";
 	}

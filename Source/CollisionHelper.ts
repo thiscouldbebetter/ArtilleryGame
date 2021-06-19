@@ -1,21 +1,26 @@
 
-class CollisionHelper
+class CollisionHelper2
 {
+	displacement: Coords;
+
+	edgeProjected: Edge;
+
 	constructor()
 	{
-		this.displacement = new Coords();
+		this.displacement = Coords.create();
 	}
 
-	static Instance()
+	static _instance: CollisionHelper2;
+	static Instance(): CollisionHelper2
 	{
-		if (CollisionHelper._instance == null)
+		if (CollisionHelper2._instance == null)
 		{
-			CollisionHelper._instance = new CollisionHelper();
+			CollisionHelper2._instance = new CollisionHelper2();
 		}
-		return CollisionHelper._instance;
+		return CollisionHelper2._instance;
 	}
  
-	doCirclesCollide(circle0, circle1)
+	doCirclesCollide(circle0: Sphere, circle1: Sphere): boolean
 	{
 		var distanceBetweenCenters = this.displacement.overwriteWith
 		(
@@ -32,18 +37,18 @@ class CollisionHelper
 		return returnValue;
 	}
 
-	doEdgesCollide(edge0, edge1)
+	doEdgesCollide(edge0: Edge, edge1: Edge): boolean
 	{
 		var returnValue = null;
  
 		if (this.edgeProjected == null)
 		{
-			this.edgeProjected = new Edge([new Coords(), new Coords()]);
+			this.edgeProjected = new Edge([Coords.create(), Coords.create()]);
 		}
 		var edgeProjected = this.edgeProjected;
 		edgeProjected.overwriteWith(edge1).projectOntoOther(edge0);
 		var edgeProjectedStart = edgeProjected.vertices[0];
-		var edgeProjectedDirection = edgeProjected.direction;
+		var edgeProjectedDirection = edgeProjected.direction();
  
 		var distanceAlongEdgeProjectedToXAxis = 
 			0 - edgeProjectedStart.y
@@ -52,7 +57,7 @@ class CollisionHelper
 		if 
 		(
 			distanceAlongEdgeProjectedToXAxis > 0 
-			&& distanceAlongEdgeProjectedToXAxis < edgeProjected.length
+			&& distanceAlongEdgeProjectedToXAxis < edgeProjected.length()
 		)
 		{
 			var distanceAlongEdge0ToIntersection =
@@ -62,7 +67,7 @@ class CollisionHelper
 			if 
 			(
 				distanceAlongEdge0ToIntersection > 0
-				&& distanceAlongEdge0ToIntersection < edge0.length
+				&& distanceAlongEdge0ToIntersection < edge0.length()
 			)
 			{
 				returnValue = true;

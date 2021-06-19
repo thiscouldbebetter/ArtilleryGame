@@ -1,21 +1,33 @@
  
 class Projectile
 {
-	constructor(color, pos, vel, radiusExplodingMax)
+	color: Color;
+	pos: Coords;
+	vel: Coords;
+	radiusExplodingMax: number;
+
+	collider: Sphere;
+	ticksSinceExplosion: number;
+	ticksToExplode: number;
+
+	constructor
+	(
+		color: Color, pos: Coords, vel: Coords, radiusExplodingMax: number
+	)
 	{
 		this.color = color;
 		this.pos = pos;
 		this.vel = vel;
 		this.radiusExplodingMax = radiusExplodingMax;
-	 
+
 		var radiusInFlight = 2;
 		this.collider = new Sphere(this.pos, radiusInFlight);
-	 
+
 		this.ticksSinceExplosion = null;
 		this.ticksToExplode = 30;
 	}
 
-	radiusCurrent()
+	radiusCurrent(): number
 	{
 		var radiusCurrent = 
 			this.radiusExplodingMax 
@@ -25,7 +37,7 @@ class Projectile
 		return radiusCurrent;
 	}
  
-	updateForTimerTick(world)
+	updateForTimerTick(world: World2): void
 	{
 		if (this.ticksSinceExplosion == null)
 		{
@@ -34,7 +46,7 @@ class Projectile
 				world.gravityPerTick
 			).add
 			(
-				new Coords(.001, 0).multiplyScalar(world.windVelocity)
+				new Coords(.001, 0, 0).multiplyScalar(world.windVelocity)
 			);
 			this.pos.add(this.vel);
 			if (this.pos.y > world.size.y)
@@ -45,7 +57,7 @@ class Projectile
 			{
 				var surfaceAltitude = world.landscape.altitudeAtX(this.pos.x);
 				var isBeneathHorizon = (this.pos.y >= surfaceAltitude);
-				if (isBeneathHorizon == true)
+				if (isBeneathHorizon)
 				{
 					this.ticksSinceExplosion = 0;
 					this.pos.y = surfaceAltitude;
@@ -58,7 +70,7 @@ class Projectile
 		}
 		else
 		{  
-			var collisionHelper = CollisionHelper.Instance();
+			var collisionHelper = CollisionHelper2.Instance();
 			var actors = world.actors;
 			for (var i = 0; i < actors.length; i++)
 			{
@@ -96,24 +108,31 @@ class Projectile
 
 	// drawable
 
-	drawToDisplay(display)
+	drawToDisplay(display: Display2D): void
 	{
 		if (this.ticksSinceExplosion == null)
 		{
 			display.drawCircle
 			(
-				this.pos, this.collider.radius, this.color
+				this.pos, this.collider.radius, this.color,
+				null, null // colorBorder, borderThickness
 			);
 			display.drawLine
 			(
 				this.pos, 
 				this.pos.clone().subtract(this.vel), 
-				this.color
+				this.color,
+				1, // lineThickness
 			);
 		}
 		else
 		{
-			display.drawCircle(this.pos, this.radiusCurrent(), this.color);
+			display.drawCircle
+			(
+				this.pos, this.radiusCurrent(), this.color,
+				null, // colorBorder
+				null // borderThickness
+			);
 		}
 	}
 }

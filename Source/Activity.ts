@@ -1,29 +1,38 @@
   
-class Activity
+class Activity2
 {
-	constructor(perform)
+	perform: (w: World2, a: Actor2) => void;
+
+	constructor(perform: (w: World2, a: Actor2) => void)
 	{
 		this.perform = perform;
 	}
 
-	static Instances()
+	static _instances: Activity2_Instances;
+	static Instances(): Activity2_Instances
 	{
-		if (Activity._instances == null)
+		if (Activity2._instances == null)
 		{
-			Activity._instances = new Activity_Instances();
+			Activity2._instances = new Activity2_Instances();
 		}
-		return Activity._instances;
+		return Activity2._instances;
 	}
 }
  
-class Activity_Instances
+class Activity2_Instances
 {
+	DoNothing: Activity2;
+	UserInputAccept: Activity2;
+
 	constructor()
 	{
-		this.DoNothing = new Activity(function perform() {});
-		this.UserInputAccept = new Activity
+		this.DoNothing = new Activity2
 		(
-			(world, actor) => // perform
+			(world: World2, actor: Actor2) => {} // perform 
+		);
+		this.UserInputAccept = new Activity2
+		(
+			(world: World2, actor: Actor2) => // perform
 			{
 				var inputHelper = Globals.Instance().inputHelper;
 				var inputActive = inputHelper.keyPressed;
@@ -85,7 +94,7 @@ class Activity_Instances
 							// vel
 							actor.firePolarAbsolute().toCoords
 							(
-								new Coords()
+								Coords.create()
 							).normalize().multiplyScalar
 							(
 								actor.powerCurrent
@@ -106,7 +115,7 @@ class Activity_Instances
 					}
 				}
 
-				inputHelper.keyPressed = false;
+				inputHelper.keyPressed = null;
 			}
 		);
 	}

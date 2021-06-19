@@ -1,37 +1,58 @@
 
-class ItemDefn
+class ItemDefn2
 {
-	constructor(name, projectileBuild)
+	name: string;
+	projectileBuild: (color: Color, pos:Coords, vel: Coords)=>Projectile;
+
+	constructor
+	(
+		name: string,
+		projectileBuild: (color: Color, pos:Coords, vel: Coords) => Projectile
+	)
 	{
 		this.name = name;
 		this.projectileBuild = projectileBuild;
 	}
 
-	static Instances()
+	static _instances: ItemDefn2_Instances;
+	static Instances(): ItemDefn2_Instances
 	{
-		if (ItemDefn._instances == null)
+		if (ItemDefn2._instances == null)
 		{
-			ItemDefn._instances = new ItemDefn_Instances();
+			ItemDefn2._instances = new ItemDefn2_Instances();
 		}
-		return ItemDefn._instances;
+		return ItemDefn2._instances;
 	}
 }
 
-class ItemDefn_Instances
+class ItemDefn2_Instances
 {
+	Shell: ItemDefn2;
+	ShellLarge: ItemDefn2;
+	Slug: ItemDefn2;
+
+	_All: ItemDefn2[];
+	_AllByName: Map<string, ItemDefn2>;
+
 	constructor()
 	{
-		this.Shell = new ItemDefn
+		this.Shell = new ItemDefn2
 		(
-			"Shell", (color, pos, vel) => new Projectile(color, pos, vel, 20)
+			"Shell",
+			(color: Color, pos: Coords, vel: Coords) =>
+				new Projectile(color, pos, vel, 20)
 		);
-		this.ShellLarge = new ItemDefn
+		this.ShellLarge = new ItemDefn2
 		(
-			"ShellLarge", (color, pos, vel) => new Projectile(color, pos, vel, 50)
+			"ShellLarge",
+			(color: Color, pos: Coords, vel: Coords) =>
+				new Projectile(color, pos, vel, 50)
 		);
-		this.Slug = new ItemDefn
+		this.Slug = new ItemDefn2
 		(
-			"Slug", (color, pos, vel) => new Projectile(color, pos, vel, 2)
+			"Slug",
+			(color: Color, pos: Coords, vel: Coords) =>
+				new Projectile(color, pos, vel, 2)
 		);
 
 		this._All =

@@ -1,10 +1,34 @@
  
-class Actor
+class Actor2
 {
-	constructor(color, pos, activity, items)
+	color: Color;
+	pos: Coords;
+	activity: Activity2;
+	items: Item2[];
+
+	itemSelectedIndex: number;
+	wins: number;
+	ticksSinceKilled: number;
+	ticksToDie: 30;
+	collider: Sphere;
+	powerCurrent: number;
+	powerMin: number;
+	powerMax: number;
+	powerPerTick: number;
+	azimuthInTurnsMin: number;
+	azimuthInTurnsMax: number;
+	turnsPerTick: number;
+	firePolar: Polar;
+	muzzlePos: Coords;
+	loc: Disposition;
+
+	constructor
+	(
+		color: Color, pos: Coords, activity: Activity2, items: Item2[]
+	)
 	{
 		this.color = color;
-		this.loc = new Disposition(pos);
+		this.loc = Disposition.fromPos(pos);
 		this.activity = activity;
 
 		this.items = items;
@@ -13,43 +37,44 @@ class Actor
 		this.wins = 0;
 		this.ticksSinceKilled = null;
 		this.ticksToDie = 30;
-	 
+
 		this.collider = new Sphere(this.loc.pos, 8);
-	 
+
 		this.powerMin = 1;
 		this.powerMax = 6;
 		this.powerPerTick = .1;
-	 
+
 		this.azimuthInTurnsMin = .5;
 		this.azimuthInTurnsMax = 1;
 		this.turnsPerTick = 1.0 / Polar.DegreesPerTurn;
 		this.firePolar = new Polar
 		(
 			(this.azimuthInTurnsMin + this.azimuthInTurnsMax) / 2, 
-			this.collider.radius * 2
+			this.collider.radius * 2,
+			0
 		);
 		this.muzzlePos = pos.clone().add
 		(
-			this.firePolar.toCoords( new Coords() )
+			this.firePolar.toCoords( Coords.create() )
 		);
-	  
+
 		this.reset();
 	}
 
-	firePolarAbsolute()
+	firePolarAbsolute(): Polar
 	{
 		var forward = this.loc.orientation.forward;
-		var forwardInTurns = new Polar().fromCoords(forward).azimuthInTurns;
+		var forwardInTurns = Polar.create().fromCoords(forward).azimuthInTurns;
 		var returnValue = this.firePolar.clone().addToAzimuthInTurns(forwardInTurns);
 		return returnValue;
 	}
 
-	itemSelected()
+	itemSelected(): Item2
 	{
 		return this.items[this.itemSelectedIndex];
 	}
 
-	reset()
+	reset(): void
 	{
 		this.firePolar.azimuthInTurns = 
 			(this.azimuthInTurnsMin + this.azimuthInTurnsMax) / 2, 
@@ -60,7 +85,7 @@ class Actor
 		this.loc.vel.clear();
 	}
  
-	updateForTimerTick(world)
+	updateForTimerTick(world: World2): void
 	{
 		if (this.ticksSinceKilled == null)
 		{
@@ -92,7 +117,7 @@ class Actor
 				pos.y = surfaceAltitude;
 
 				var surfaceSlopeInTurns = landscape.slopeAtX(pos.x);
-				var surfaceSlopeAsPolar = new Polar(surfaceSlopeInTurns, 1);
+				var surfaceSlopeAsPolar = new Polar(surfaceSlopeInTurns, 1, 0);
 				var forward = this.loc.orientation.forward;
 				surfaceSlopeAsPolar.toCoords(forward);
 			}
@@ -109,21 +134,22 @@ class Actor
  
 	// drawable
  
-	drawToDisplay(display)
+	drawToDisplay(display: Display2D): void
 	{
 		var pos = this.loc.pos;
 
-		display.drawLine(pos, this.muzzlePos);
+		display.drawLine(pos, this.muzzlePos, this.color, 1);
 
 		var ori = this.loc.orientation;
 		var forward = ori.forward;
-		var forwardAsPolar = new Polar().fromCoords(forward);
+		var forwardAsPolar = Polar.create().fromCoords(forward);
 		var forwardAsTurns = forwardAsPolar.azimuthInTurns;
 		var angleStart = NumberHelper.wrapToRangeMax(forwardAsTurns + .5, 1);
 		var angleStop = NumberHelper.wrapToRangeMax(angleStart + .5, 1);
 		display.drawWedge
 		(
-			pos, this.collider.radius, angleStart, angleStop, this.color
+			pos, this.collider.radius, angleStart, angleStop, this.color,
+			null // colorBorder
 		);
 
 		var world = Globals.Instance().world;
@@ -152,7 +178,8 @@ class Actor
 				text,
 				this.collider.radius,
 				Coords.Instances().Zeroes,
-				this.color
+				this.color,
+				null, null, null, null // ?
 			);
 		}
 	}

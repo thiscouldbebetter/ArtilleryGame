@@ -1,7 +1,14 @@
  
 class Globals
 {
-	static Instance()
+	timerTicksPerSecond: number;
+	display: Display2D;
+	world: World2;
+	inputHelper: InputHelper2;
+	timer: any;
+
+	static _instance: Globals;
+	static Instance(): Globals
 	{
 		if (Globals._instance == null)
 		{
@@ -10,14 +17,19 @@ class Globals
 		return Globals._instance;
 	}
  
-	initialize(timerTicksPerSecond, display, world)
+	initialize
+	(
+		timerTicksPerSecond: number, display: Display2D, world: World2
+	): void
 	{
+		this.timerTicksPerSecond = timerTicksPerSecond;
+
 		this.display = display;
-		this.display.initialize();
+		this.display.initialize(null);
  
 		this.world = world;
  
-		this.inputHelper = new InputHelper();
+		this.inputHelper = new InputHelper2();
 
 		var millisecondsPerTimerTick = Math.floor(1000 / this.timerTicksPerSecond);
 		this.timer = setInterval
@@ -31,7 +43,7 @@ class Globals
  
 	// events
  
-	handleEventTimerTick()
+	handleEventTimerTick(): void
 	{
 		this.world.drawToDisplay(this.display);
 		this.world.updateForTimerTick();
