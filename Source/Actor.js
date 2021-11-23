@@ -93,7 +93,7 @@ class Actor2 {
                 + " Angle:" + fireAzimuthInDegrees
                 + " Power:" + this.powerCurrent
                 + " Wind: " + windDirection + " " + windSpeed;
-            display.drawText(text, this.collider.radius, Coords.Instances().Zeroes, this.color, null, null, null, null // ?
+            display.drawText(text, this.collider.radius, Coords.Instances().Zeroes, this.color, null, null, null // ?
             );
         }
     }

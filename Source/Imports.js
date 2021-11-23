@@ -143,7 +143,6 @@ var VisualSound = gf.VisualSound;
 var Entity = gf.Entity;
 var EntityBuilder = gf.EntityBuilder;
 var EntityGenerator = gf.EntityGenerator;
-var Loadable = gf.Loadable;
 var Playable = gf.Playable;
 var Selector = gf.Selector;
 var Universe = gf.Universe;
